@@ -175,6 +175,7 @@ corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr
 #-------------------------------------------------------------------------------------
 
 ropa$promo <- factor(ropa$promo)
+ropaprueba$promo <-factor(ropaprueba$promo)
 
 mercado <- ropa %>%  
   dplyr::select(tamamer)
@@ -185,6 +186,8 @@ promo <- ropa%>%
 ropa <- ropa %>%
   mutate(peso<-telefono*paginas*correo)
 
+ropaprueba <- ropaprueba %>%
+  mutate(peso<-telefono*paginas*correo)
 #remover el idloc, nomina, idmercado, promo
 ropa <- ropa %>% 
   dplyr::select(-c(idloc, nomina, idmercado, telefono, edadloc,paginas,correo))
@@ -196,11 +199,17 @@ ropawin <- dummyVars(~.,data=ropa) #dice como estas variables son las que hay qu
 ropafin <- as.data.frame(predict(ropawin,newdata=ropa)) #pasa esas variables a dummy
 ropafin %>% View()
 
+ropapruebawin <- dummyVars(~.,data=ropaprueba) #dice como estas variables son las que hay que pasar a dummy
+ropapruebafin <- as.data.frame(predict(ropawin,newdata=ropaprueba)) #pasa esas variables a dummy
+
 #Eliminar una categor?a por variable para evitar multicolinealidad (lo mejor si uno es juicioso es quitar la que tenga más 1 pero da la misma con lo que uno quite)
 ropafin2 <- ropafin %>% 
   dplyr::select(-c(tamamerPequeño, promo.3))
 
 ropafin2 %>% View()
+
+ropapruebafin2 <- ropapruebafin %>% 
+  dplyr::select(-c(tamamerPequeño, promo.3))
 
 #veamos la dimension final de la base de datos
 ropafin2 %>% dim()
@@ -388,7 +397,7 @@ pred_lasso_se <- predict.glmnet(fitlasso, predic.test, s=foundlasso$lambda.1se)
 # Stepwise
 pred_step <- predict(modelocarstep,ropa.test)
 
-pred_prueba_pez <- predict(modelocarstep,ropaprueba)
+pred_prueba_pez <- predict(modelocarstep,ropapruebafin2)
 
 # C?lculo  del RMSE para cada modelo
 rmseelastic <- rmse(ropam.test[,1],pred_red)
@@ -411,7 +420,7 @@ rmsestep
 (rmselasso_se-rmseridge/rmseridge)
 
 resultadoeelastic_se <- cbind(ropaprueba,pred_prueba_pez)
-resultadoeelastic_se <- resultadoeelastic_se[,-c(2:12)]
+resultadoeelastic_se <- resultadoeelastic_se[,-c(2:13)]
 resultadoeelastic_se$ropamujer <- resultadoeelastic_se$pred_prueba_pez
 resultadoeelastic_se <- resultadoeelastic_se[,-c(2)]
-write.table(resultadoeelastic_se,"submission.csv",col.names = T, row.names = F,sep = ',',dec = '.')
+write.table(resultadoeelastic_se,"submissionV2.csv",col.names = T, row.names = F,sep = ',',dec = '.')
