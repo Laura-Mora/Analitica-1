@@ -166,6 +166,102 @@ ggarrange(hist1, hist2, hist3, hist4, hist5, hist6, hist7, nrow = 3, ncol = 3)
 # Limpieza de environment
 rm(hist1, hist2, hist3, hist4, hist5, hist6, hist7)
 
+# Relaciones numericas con variable a predecir versión según promo
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+# Relaciones numericas con variable a predecir versión según tamamer
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+# Relaciones numericas con variable a predecir versión según idmercado
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+#Resumen 
+ggpairs(ropa, alpha=0.5, position= "jitter") 
+
 matrizcor <- cor(ropa[,c(1:9,11:12)])
 corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
          number.cex=0.7,type = "upper", diag = FALSE)
@@ -183,6 +279,11 @@ ropa <- ropa %>%
 ropa %>% dim()
 ropa %>% View()
 
+ropaprueba <- ropaprueba %>% 
+  dplyr::select(-c(servicio, ropamujer))
+ropa %>% dim()
+ropa %>% View()
+
 ropa$nomina <- scale(ropa$nomina)
 ropa$correo <- scale(ropa$correo)
 ropa$impresa <- scale(ropa$impresa)
@@ -196,11 +297,18 @@ ropawin <- dummyVars(~.,data=ropa) #dice como estas variables son las que hay qu
 ropafin <- as.data.frame(predict(ropawin,newdata=ropa)) #pasa esas variables a dummy
 ropafin %>% View()
 
+ropapruebawin <- dummyVars(~.,data=ropaprueba) #dice como estas variables son las que hay que pasar a dummy
+ropapruebafin <- as.data.frame(predict(ropapruebawin,newdata=ropaprueba)) #pasa esas variables a dummy
+ropapruebafin %>% View()
+
 #Eliminar una categor?a por variable para evitar multicolinealidad (lo mejor si uno es juicioso es quitar la que tenga más 1 pero da la misma con lo que uno quite)
 ropafin2 <- ropafin %>% 
   dplyr::select(-c(tamamerPequeño))
 
 ropafin2 %>% View()
+
+ropapruebafin2 <- ropapruebafin %>% 
+  dplyr::select(-c(tamamerPequeño))
 
 #veamos la dimension final de la base de datos
 ropafin2 %>% dim()
@@ -390,6 +498,15 @@ pred_step <- predict(modelocarstep,ropa.test)
 
 pred_prueba_pez <- predict(modelocarstep,ropaprueba)
 
+
+
+
+predicropa.test <- ropapruebafin2 %>% 
+  as.matrix()
+
+pred_prueba_pez_red <- predict.glmnet(elastic8, predicropa.test, s=found8$lambda.min)
+pred_prueba_pez_lasso <- predict.glmnet(fitlasso, predicropa.test, s=foundlasso$lambda.1se)
+
 # C?lculo  del RMSE para cada modelo
 rmseelastic <- rmse(ropam.test[,1],pred_red)
 rmseelastic_se <- rmse(ropam.test[,1],pred_red_se)
@@ -409,6 +526,12 @@ rmsestep
 
 1000*(rmselasso_se-rmseridge)
 (rmselasso_se-rmseridge/rmseridge)
+
+resultadoeelastic <- cbind(ropaprueba,pred_prueba_pez_red)
+resultadoeelastic <- resultadoeelastic[,-c(2:10)]
+resultadoeelastic$ropamujer <- resultadoeelastic$s1
+resultadoeelastic <- resultadoeelastic[,-c(2)]
+write.table(resultadoeelastic,"submissionV4red.csv",col.names = T, row.names = F,sep = ',',dec = '.')
 
 resultadoeelastic_se <- cbind(ropaprueba,pred_prueba_pez)
 resultadoeelastic_se <- resultadoeelastic_se[,-c(2:12)]

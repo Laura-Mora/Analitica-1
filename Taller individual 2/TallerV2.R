@@ -166,6 +166,96 @@ ggarrange(hist1, hist2, hist3, hist4, hist5, hist6, hist7, nrow = 3, ncol = 3)
 # Limpieza de environment
 rm(hist1, hist2, hist3, hist4, hist5, hist6, hist7)
 
+# Relaciones numericas con variable a predecir versión según promo
+gpp1 <- ropa %>% ggplot(aes(y = ropamujer, x = servicio, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpp2 <- ropa %>% ggplot(aes(y = ropamujer, x = nomina, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpp3 <- ropa %>% ggplot(aes(y = ropamujer, x = edadloc, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpp4 <- ropa %>% ggplot(aes(y = ropamujer, x = correo, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpp5 <- ropa %>% ggplot(aes(y = ropamujer, x = paginas, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpp6 <- ropa %>% ggplot(aes(y = ropamujer, x = telefono, 
+                            color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggarrange(gpp1, gpp2, gpp3, gpp4, gpp5, gpp6, nrow = 2, ncol = 3)
+
+rm(gpp1, gpp2, gpp3, gpp4, gpp5, gpp6)
+
+# Relaciones numericas con variable a predecir versión según tamamer
+gpt1 <- ropa %>% ggplot(aes(y = ropamujer, x = servicio, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpt2 <- ropa %>% ggplot(aes(y = ropamujer, x = nomina, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpt3 <- ropa %>% ggplot(aes(y = ropamujer, x = edadloc, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpt4 <- ropa %>% ggplot(aes(y = ropamujer, x = correo, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpt5 <- ropa %>% ggplot(aes(y = ropamujer, x = paginas, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpt6 <- ropa %>% ggplot(aes(y = ropamujer, x = telefono, 
+                            color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggarrange(gpt1, gpt2, gpt3, gpt4, gpt5, gpt6, nrow = 2, ncol = 3)
+
+rm(gpt1, gpt2, gpt3, gpt4, gpt5, gpt6)
+
+# Relaciones numericas con variable a predecir versión según idmercado
+gpi1 <- ropa %>% ggplot(aes(y = ropamujer, x = servicio, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpi2 <- ropa %>% ggplot(aes(y = ropamujer, x = nomina, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpi3 <- ropa %>% ggplot(aes(y = ropamujer, x = edadloc, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpi4 <- ropa %>% ggplot(aes(y = ropamujer, x = correo, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpi5 <- ropa %>% ggplot(aes(y = ropamujer, x = paginas, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+gpi6 <- ropa %>% ggplot(aes(y = ropamujer, x = telefono, 
+                            color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggarrange(gpi1, gpi2, gpi3, gpi4, gpi5, gpi6, nrow = 2, ncol = 3)
+
+rm(gpi1, gpi2, gpi3, gpi4, gpi5, gpi6)
+
+#Resumen 
+ggpairs(ropa, alpha=0.5, position= "jitter") 
+
 matrizcor <- cor(ropa[,c(1:9,11:12)])
 corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
          number.cex=0.7,type = "upper", diag = FALSE)
@@ -182,6 +272,10 @@ mercado <- ropa %>%
 
 promo <- ropa%>%  
   dplyr::select(promo)
+
+matrizcor <- cor(ropa[,c(1:9,11:12)])
+corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
+         number.cex=0.7,type = "upper", diag = FALSE)
 
 ropa <- ropa %>%
   mutate(peso<-telefono*paginas*correo)

@@ -166,6 +166,102 @@ ggarrange(hist1, hist2, hist3, hist4, hist5, hist6, hist7, nrow = 3, ncol = 3)
 # Limpieza de environment
 rm(hist1, hist2, hist3, hist4, hist5, hist6, hist7)
 
+# Relaciones numericas con variable a predecir versión según promo
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (promo))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+# Relaciones numericas con variable a predecir versión según tamamer
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (tamamer))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+# Relaciones numericas con variable a predecir versión según idmercado
+ggplot(data = ropa,
+       aes(y = ropamujer, x = servicio, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = nomina, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = edadloc, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = correo, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = paginas, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = ropa,
+       aes(y = ropamujer, x = telefono, 
+           color = factor (idmercado))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+#Resumen 
+ggpairs(ropa, alpha=0.5, position= "jitter") 
+
 matrizcor <- cor(ropa[,c(1:9,11:12)])
 corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
          number.cex=0.7,type = "upper", diag = FALSE)

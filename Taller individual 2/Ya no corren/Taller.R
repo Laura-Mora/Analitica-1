@@ -1,0 +1,235 @@
+if (!require('caret')) install.packages('caret') #modelos supervisados
+if (!require('corrplot')) install.packages('corrplot') 
+if (!require('RColorBrewer')) install.packages('RColorBrewer')
+if (!require('glmnet')) install.packages('glmnet')# redes elasticas en el modelo lineal generalizado
+if (!require('corrr')) install.packages('corrr')#correlaciones en unas tablas
+if (!require('Metrics')) install.packages('Metrics')
+if (!require('tidyverse')) install.packages('tidyverse')
+if (!require('readxl')) install.packages('readxl')
+if (!require('psych')) install.packages('psych')
+if (!require('fpc')) install.packages('fpc')
+if (!require('vcd')) install.packages('vcd')
+if (!require('ggpubr')) install.packages('ggpubr') 
+if (!require('GGally')) install.packages('GGally')
+
+#Lectura e inspección de estructura de los datos
+
+getwd()
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+ropa <- read_excel("Datos Taller individual 2 - 2210 (Estudiantes).xlsx",sheet = "Train")
+ropaprueba <- read_excel("Datos Taller individual 2 - 2210 (Estudiantes).xlsx",sheet = "Test")
+ropa %>% glimpse()
+## Nombres de las columnas
+ropa %>% colnames()
+
+## Dimensión del conjunto numero de filas y columnas
+dim(ropa)
+
+ropa%>% View()
+## Revisar la estructura del objeto que se tiene y los diferentes 
+## tipos de datos mediante el comando str
+str(ropa)
+
+summary(ropa)
+
+#-------------------------------------------------------------------------------------
+# Análisis descriptivo
+#-------------------------------------------------------------------------------------
+
+## Revisión de las variables escalares
+describe(ropa[,2:8,12])
+
+# Cálculo de CV's (coeficiente de variación)
+CV <- function(var){(sd(var)/mean(var))*100}
+apply(ropa[,2:8,12],2, CV)
+
+#Diagrama de barras exploración  tamamer
+ggplot(ropa) +
+  geom_bar(mapping = aes(x =  tamamer, colour =  tamamer))
+
+#Diagrama de barras exploración  idmercado
+ggplot(ropa) +
+  geom_bar(mapping = aes(x =  idmercado, colour =  idmercado))
+
+#Diagrama de barras exploración  idmercado
+ggplot(ropa) +
+  geom_bar(mapping = aes(x =  promo, colour =  promo))
+
+#boxplot para ver la posible presencia de atípicos
+#edadloc
+boxedadloc<- ropa%>%ggplot(aes(y=edadloc, colour = edadloc))+
+  geom_boxplot()+
+  ggtitle("edadloc")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#correo
+boxcorreo<- ropa%>%ggplot(aes(y=correo, colour = correo))+
+  geom_boxplot()+
+  ggtitle("Boxplot correo")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#paginas
+boxpaginas<- ropa%>%ggplot(aes(y=paginas, colour = paginas))+
+  geom_boxplot()+
+  ggtitle("Boxplot paginas")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#telefono
+boxtelefono<- ropa%>%ggplot(aes(y=telefono, colour = telefono))+
+  geom_boxplot()+
+  ggtitle("Boxplot telefono")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#servicio
+boxservicio<- ropa%>%ggplot(aes(y=servicio, colour = servicio))+
+  geom_boxplot()+
+  ggtitle("Boxplot servicio")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#nomina
+boxnomina<- ropa%>%ggplot(aes(y=nomina, colour = nomina))+
+  geom_boxplot()+
+  ggtitle("Boxplot nomina")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+#ropamujer
+boxropamujer<- ropa%>%ggplot(aes(y=ropamujer, colour = ropamujer))+
+  geom_boxplot()+
+  ggtitle("Boxplot ropamujer")+
+  theme_minimal()
+theme(plot.title = element_text(hjust = 0.5))
+
+ggarrange(boxedadloc, boxcorreo, boxpaginas, boxtelefono, boxservicio, boxnomina, boxropamujer, nrow = 3, ncol = 3)
+
+rm(boxedadloc, boxcorreo, boxpaginas, boxtelefono, boxservicio, boxnomina, boxropamujer)
+
+# Creamos los histogramas
+hist1 <- ropa %>% ggplot(aes(x=edadloc, colour = edadloc)) +
+  geom_histogram() +
+  ggtitle('Histograma \nedadloc') +
+  labs(y = "", x = "edadloc") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist2 <- ropa %>% ggplot(aes(x=correo, colour = correo)) +
+  geom_histogram() +
+  ggtitle('Histograma \ncorreo') +
+  labs(y = "", x = "correo") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist3 <- ropa %>% ggplot(aes(x=paginas, colour = paginas)) +
+  geom_histogram() +
+  ggtitle('Histograma \npaginas') +
+  labs(y = "", x = "paginas") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist4 <- ropa %>% ggplot(aes(x=telefono, colour = telefono)) +
+  geom_histogram() +
+  ggtitle('Histograma \ntelefono') +
+  labs(y = "", x = "telefono") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist5 <- ropa %>% ggplot(aes(x=servicio, colour = servicio)) +
+  geom_histogram() +
+  ggtitle('Histograma \nservicio') +
+  labs(y = "", x = "servicio") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist6 <- ropa %>% ggplot(aes(x=nomina, colour = nomina)) +
+  geom_histogram() +
+  ggtitle('Histograma \nnomina') +
+  labs(y = "", x = "nomina") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+hist7 <- ropa %>% ggplot(aes(x=ropamujer, colour = ropamujer)) +
+  geom_histogram() +
+  ggtitle('Histograma \nropamujer') +
+  labs(y = "", x = "ropamujer") +
+  theme_minimal() +
+  theme(plot.title = element_text(hjust = 0.5))
+
+ggarrange(hist1, hist2, hist3, hist4, hist5, hist6, hist7, nrow = 3, ncol = 3)
+
+# Limpieza de environment
+rm(hist1, hist2, hist3, hist4, hist5, hist6, hist7)
+
+matrizcor <- cor(ropa[,c(1:9,11:12)])
+corrplot(matrizcor, method="square", tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
+         number.cex=0.7,type = "upper", diag = FALSE)
+#-------------------------------------------------------------------------------------
+# Preparación de datos
+#-------------------------------------------------------------------------------------
+
+mercado <- ropa %>%  
+  dplyr::select(tamamer)
+
+ropa %>% dim()
+ropa %>% View()
+
+#crear variables dummy (binarias)
+ropawin <- dummyVars(~.,data=ropa) #dice como estas variables son las que hay que pasar a dummy
+ropafin <- as.data.frame(predict(ropawin,newdata=ropa)) #pasa esas variables a dummy
+ropafin %>% View()
+
+ropapruebawin <- dummyVars(~.,data=ropaprueba[,c(1:11)]) #dice como estas variables son las que hay que pasar a dummy
+ropapruebafin <- as.data.frame(predict(ropapruebawin,newdata=ropaprueba)) #pasa esas variables a dummy
+ropapruebafin %>% View()
+
+#Eliminar una categor?a por variable para evitar multicolinealidad (lo mejor si uno es juicioso es quitar la que tenga más 1 pero da la misma con lo que uno quite)
+ropafin2 <- ropafin %>% 
+  dplyr::select(-c(tamamerPequeño))
+
+ropafin2 %>% View()
+
+#veamos la dimension final de la base de datos
+ropafin2 %>% dim()
+
+ropapruebafin2 <- ropapruebafin %>% 
+  dplyr::select(-c(tamamerPequeño))
+
+#retiro la variable a predecir
+predictores <- ropafin2 %>% 
+  dplyr::select(-ropamujer)
+
+#Gráfico de correlaciones
+corpred <- cor(predictores)
+corrplot(corpred, method="square",tl.cex = 0.7,col=brewer.pal(n=8, name="PuOr"),addCoef.col = "black", 
+         number.cex=0.7,type = "upper", diag = FALSE)
+
+#Filtrando variables altamente correlacionadas
+corfil <- predictores %>% 
+  correlate(use = "pairwise.complete.obs") %>% 
+  shave() %>% 
+  stretch(na.rm = TRUE) %>% 
+  filter(between(r, 0.6, 1)|between(r,-1,-0.6))
+corfil %>% View() #Matriz correlaciones atributos
+
+#Componentes principales
+componentescar <- prcomp(predictores, center=TRUE, scale.=TRUE)
+summary(componentescar)
+
+##Entrenamiento y validaci?n 80-20
+set.seed(49584) 
+sample <- sample.int(nrow(ropafin2), floor(.8*nrow(ropafin2)))
+ropa.train <- ropafin2[sample, ]
+ropa.test <- ropapruebafin2[-sample, ]
+
+# haciendo el modelo sencillo y el step
+modeloaug <- lm(ropamujer~., data=ropa.train)
+modelocarstep <- step(modeloaug, direction="both", trace=0)
+summary(modelocarstep)
+
+
+
+
