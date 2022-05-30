@@ -109,13 +109,90 @@ ggplot(data = citas,
   geom_point(alpha = 0.5, position = "jitter")
 
 
+citas$weekDay <- as.factor(weekdays(as.Date(citas$FECHA_CITA))) 
+
+#Diagrama de barras exploración weekDay
+ggplot(citas) +
+  geom_bar(mapping = aes(x = weekDay, colour = weekDay))
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = GENERO, 
+           color = factor (weekDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = weekDay, 
+           color = factor (GENERO))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = EDAD, 
+           color = factor (weekDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = weekDay, 
+           color = factor (ESPECIALIDAD))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = TIPO_AFILIACION, 
+           color = factor (weekDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = weekDay, 
+           color = factor (TIPO_AFILIACION))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+citas$hourDay <- as.factor(format(as.POSIXct(citas$FECHA_CITA), format = "%H"))
+
+ggplot(citas) +
+  geom_bar(mapping = aes(x = hourDay, colour = hourDay))
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = GENERO, 
+           color = factor (hourDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = hourDay, 
+           color = factor (GENERO))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = EDAD, 
+           color = factor (hourDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = hourDay, 
+           color = factor (ESPECIALIDAD))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = hourDay, 
+           color = factor (TIPO_AFILIACION))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = hourDay, 
+           color = factor (TIPO_AFILIACION))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+ggplot(data = citas,
+       aes(y = ESTAFINAL, x = hourDay, 
+           color = factor (weekDay))) +
+  geom_point(alpha = 0.5, position = "jitter")
+
+
 #-------------------------------------------------------------------------------------
 # Preparación base de datos
 #-------------------------------------------------------------------------------------
 citas$GENERO <- as.factor(citas$GENERO)
 citas$TIPO_AFILIACION <- as.factor(citas$TIPO_AFILIACION)
 
-top_3<-(citas %>% count(citas$ESPECIALIDAD, sort= TRUE))[4:32,]
+top_3<-(citas %>% count(citas$ESPECIALIDAD, sort= TRUE))[3:32,]
 colnames(top_3)[1]<-"especialidad"
 citas <- citas %>%                              
   mutate(citas$Especialidad_new <- replace(citas$ESPECIALIDAD, citas$ESPECIALIDAD %in% top_3$especialidad, "OTRO"))
@@ -395,7 +472,7 @@ tablacruce[which.max(tablacruce$wins),]
 #-------------------------------------------------------------------------------------
 
 #Convertir a factor
-citas2 <- citas %>% 
+citas2 <- citas2 %>% 
   mutate_if(is.character, as.factor)
 
 cerealtest <- cerealtest %>% 
